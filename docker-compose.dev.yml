@@ -1,0 +1,41 @@
+services:
+  postgres-dev:
+    image: postgres:15
+    container_name: postgres-dev
+    environment:
+      POSTGRES_DB: carrito_dev
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  backend-dev:
+    build: .
+    container_name: backend-dev
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-dev:5432/carrito_dev
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 123
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres-dev
+    restart: unless-stopped
+
+  frontend-dev:
+    build:
+      context: ./carrito-frontend
+      dockerfile: Dockerfile
+    container_name: frontend-dev
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend-dev
+    restart: unless-stopped
+
+volumes:
+  postgres_dev_data:

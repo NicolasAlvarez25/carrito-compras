@@ -1,0 +1,41 @@
+services:
+  postgres-qa:
+    image: postgres:15
+    container_name: postgres-qa
+    environment:
+      POSTGRES_DB: carrito_qa
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_qa_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  backend-qa:
+    build: .
+    container_name: backend-qa
+    environment:
+      SPRING_PROFILES_ACTIVE: qa
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-qa:5432/carrito_qa
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 123
+    ports:
+      - "8081:8080"
+    depends_on:
+      - postgres-qa
+    restart: unless-stopped
+
+  frontend-qa:
+    build:
+      context: ./carrito-frontend
+      dockerfile: Dockerfile
+    container_name: frontend-qa
+    ports:
+      - "5174:80"
+    depends_on:
+      - backend-qa
+    restart: unless-stopped
+
+volumes:
+  postgres_qa_data:
