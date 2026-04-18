@@ -95,27 +95,29 @@ git clone https://github.com/NicolasAlvarez25/carrito-compras.git
 cd carrito-compras
 ```
 
-### 2. Levantar los ambientes
+### 2. Construir y levantar los ambientes
+
+> ⚠️ La primera vez es obligatorio usar `--build` para construir las imágenes Docker.
 
 **DEV:**
 ```bash
-docker compose -f docker-compose.dev.yml up -d
+docker compose -f docker-compose.dev.yml up --build -d
 ```
 
 **QA:**
 ```bash
-docker compose -f docker-compose.qa.yml up -d
+docker compose -f docker-compose.qa.yml up --build -d
 ```
 
 **PROD:**
 ```bash
-docker compose -f docker-compose.prod.yml up -d
+docker compose -f docker-compose.prod.yml up --build -d
 ```
 
-### 3. Levantar todos los ambientes a la vez
+### 3. Construir y levantar todos los ambientes a la vez
 
 ```bash
-docker compose -f docker-compose.dev.yml up -d; docker compose -f docker-compose.qa.yml up -d; docker compose -f docker-compose.prod.yml up -d
+docker compose -f docker-compose.dev.yml up --build -d; docker compose -f docker-compose.qa.yml up --build -d; docker compose -f docker-compose.prod.yml up --build -d
 ```
 
 ### 4. Verificar contenedores corriendo
